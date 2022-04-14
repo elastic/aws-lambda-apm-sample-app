@@ -1,0 +1,12 @@
+{
+  "name": "sample-app-load",
+  "version": "1.0.0",
+  "description": "Load generator for sample app",
+  "license": "Apache License 2.0",
+  "devDependencies": {
+    "elastic-apm-node": "3.31.0"
+  },
+  "dependencies": {
+    "request": "2.88.2"
+  }
+}

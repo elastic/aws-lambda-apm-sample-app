@@ -1,0 +1,37 @@
+service: sample-app
+
+frameworkVersion: '3'
+
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: dev
+  lambdaHashingVersion: '20201221'
+  region: ${file(../env.json):aws-region}
+  layers:
+    - arn:aws:lambda:${aws:region}:267093732750:layer:elastic-apm-extension-ver-0-0-5-x86_64:1
+    - arn:aws:lambda:${aws:region}:267093732750:layer:elastic-apm-node-ver-3-31-0:1
+  environment:
+    NODE_OPTIONS: -r elastic-apm-node/start
+    ELASTIC_APM_LAMBDA_APM_SERVER: ${file(../env.json):apm-server-url}
+    ELASTIC_APM_SECRET_TOKEN: ${file(../env.json):apm-server-token}
+    #ELASTIC_APM_SERVICE_NAME: composite-service
+
+functions:
+
+  consumer:
+    handler: handler.consumer          
+    events:
+      - http:
+          path: ping
+          method: get
+
+  producer:
+    handler: handler.producer
+    environment:
+      CONSUMER_API: !Sub https://${ApiGatewayRestApi}.execute-api.${aws:region}.amazonaws.com/${self:provider.stage}/ping  
+    events:
+      - http:
+          method: post
+          path: produce  
