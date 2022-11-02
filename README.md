@@ -1,7 +1,14 @@
 This is a sample Node.js application for AWS Lambda demonstrating the usage of Elastic APM.
 
 # Usage
-To try the sample application you will need to install [npm](https://www.npmjs.com/), [Node.js](https://nodejs.org/) and the [Serverless framework](https://www.serverless.com).
+
+## Step 0 - Install Tooling
+To try the sample application you will need to install [npm](https://www.npmjs.com/) and [Node.js](https://nodejs.org/).
+Then install the [Serverless framework](https://www.serverless.com) through npm:
+
+```bash
+npm install -g serverless
+```
 
 ## Step 1 - Clone the sample application repo and install dependencies
 
@@ -29,6 +36,8 @@ You need to provide the corresponding connection details to the APM Server in th
 }
 ```
 
+Make sure to use the _plain_ APM secret token _without_ wrapping it into an Authorization header. (e.g. `a2dhFjrr84N8D24An` _instead of_ `Authorization=Bearer a2dhFjrr84N8D24An`)
+
 ## Step 3 - Deploy the sample application
 To deploy to AWS you will need an AWS access key with the following permissions:
 - AmazonS3FullAccess
@@ -45,7 +54,7 @@ Once your AWS credentials are set up, execute the following command in the *lamb
 serverless deploy
 ```
 
-Copy the base URL of the API Gateway from the output in the console (`r7ckl4adme.execute-api.eu-central-1.amazonaws.com` in the following example):
+Copy the _authority_ part of the API Gateway's URL from the output in the console. Make sure _NOT_ to include `https://` and any path (`r7ckl4adme.execute-api.eu-central-1.amazonaws.com` in the following example):
 
 ```
 …
@@ -56,8 +65,8 @@ endpoints:
 ```
 
 ## Step 4 - Generate load
-Change to the *load-generator* directory and execute the following command with the previously copied base URL of the API Gateway to start load generation.
+Change to the *load-generator* directory and execute the following command with the previously copied API Gateway's authority to start load generation.
 
 ```bash
-sh ./load.sh <PASTE_THE_API_GATEWAY_BASE_URL_HERE> 
+sh ./load.sh <PASTE_THE_API_GATEWAY_AUTHORITY_HERE> 
 ```
